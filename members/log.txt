@@ -1,0 +1,33 @@
+2022-03-25 12:54:45 [Error] (::1)  : サーバー接続エラー||
+2022-03-25 13:02:34 [Error] (::1)  : サーバー接続エラー||
+2022-03-25 13:03:08 [Error] (::1)  : サーバー接続エラー||
+2022-03-25 13:04:01 [Error] (::1)  : サーバー接続エラー||PDOException: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it in C:\xampp\htdocs\geyamaclub\idiorm.php:328
+Stack trace:
+#0 C:\xampp\htdocs\geyamaclub\idiorm.php(328): PDO->__construct('mysql:host=loca...', 'geyamaclub', 'A5yTeRq7Jsaud67', Array)
+#1 C:\xampp\htdocs\geyamaclub\idiorm.php(311): ORM::_setup_db('default')
+#2 C:\xampp\htdocs\geyamaclub\members\index.php(7): ORM::for_table('member')
+#3 {main}
+2022-03-25 13:04:01 [Error] (::1)  : サーバー接続エラー||PDOException: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it in C:\xampp\htdocs\geyamaclub\idiorm.php:328
+Stack trace:
+#0 C:\xampp\htdocs\geyamaclub\idiorm.php(328): PDO->__construct('mysql:host=loca...', 'geyamaclub', 'A5yTeRq7Jsaud67', Array)
+#1 C:\xampp\htdocs\geyamaclub\idiorm.php(311): ORM::_setup_db('default')
+#2 C:\xampp\htdocs\geyamaclub\members\index.php(7): ORM::for_table('member')
+#3 {main}
+2022-03-25 13:04:02 [Error] (::1)  : サーバー接続エラー||PDOException: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it in C:\xampp\htdocs\geyamaclub\idiorm.php:328
+Stack trace:
+#0 C:\xampp\htdocs\geyamaclub\idiorm.php(328): PDO->__construct('mysql:host=loca...', 'geyamaclub', 'A5yTeRq7Jsaud67', Array)
+#1 C:\xampp\htdocs\geyamaclub\idiorm.php(311): ORM::_setup_db('default')
+#2 C:\xampp\htdocs\geyamaclub\members\index.php(7): ORM::for_table('member')
+#3 {main}
+2022-03-25 13:04:02 [Error] (::1)  : サーバー接続エラー||PDOException: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it in C:\xampp\htdocs\geyamaclub\idiorm.php:328
+Stack trace:
+#0 C:\xampp\htdocs\geyamaclub\idiorm.php(328): PDO->__construct('mysql:host=loca...', 'geyamaclub', 'A5yTeRq7Jsaud67', Array)
+#1 C:\xampp\htdocs\geyamaclub\idiorm.php(311): ORM::_setup_db('default')
+#2 C:\xampp\htdocs\geyamaclub\members\index.php(7): ORM::for_table('member')
+#3 {main}
+2022-03-25 13:04:04 [Error] (::1)  : サーバー接続エラー||PDOException: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it in C:\xampp\htdocs\geyamaclub\idiorm.php:328
+Stack trace:
+#0 C:\xampp\htdocs\geyamaclub\idiorm.php(328): PDO->__construct('mysql:host=loca...', 'geyamaclub', 'A5yTeRq7Jsaud67', Array)
+#1 C:\xampp\htdocs\geyamaclub\idiorm.php(311): ORM::_setup_db('default')
+#2 C:\xampp\htdocs\geyamaclub\members\index.php(7): ORM::for_table('member')
+#3 {main}
