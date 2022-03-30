@@ -1,27 +1,33 @@
 <?php
-require_once "../config.php";
-require_once "../idiorm.php";
+  require_once "../config.php";
+  require_once "../idiorm.php";
+  require_once "../decrypt.php";
+  require_once "../log/add_log.php";
 
+  if(key_check(basename(dirname(__FILE__)))){
+    try {
+      $plan_db = ORM::for_table('plan')->find_many();
+      $plan_list = array();
 
-try {
-  $plan_db = ORM::for_table('plan')->find_many();
-  $plan_list = array();
+      foreach ($plan_db as $plan) {
+        $list = array(
+          "id" => $plan["date"],
+          "title" => $plan["title"],
+          "start" => $plan["date"],
+          "time" => $plan["time"],
+        );
 
-  foreach ($plan_db as $plan) {
-    $list = array(
-      "id" => $plan["date"],
-      "title" => $plan["title"],
-      "start" => $plan["date"],
-      "time" => $plan["time"],
-    );
+        array_push($plan_list, $list);
+      }
 
-    array_push($plan_list, $list);
+      $plan_list = json_encode($plan_list);
+    } catch (Exception $e) {
+      add_log("error", "データベース接続エラー || " . $e);
+    }
+  }else{
+      add_log("main", "planページのキー認証に失敗しました");
+      header("Location: ../Error");
   }
-
-  $plan_list = json_encode($plan_list);
-} catch (Exception $e) {
-  echo "サーバー接続エラー";
-}
 
 ?>
 <!DOCTYPE html>
@@ -35,7 +41,7 @@ try {
     <div class="flex md:w-2/3 w-full">
       <div id='calendar' class="w-full"></div>
     </div>
-    <div class="lg:flex lg::w-1/3 w-full lg:m-3">
+    <div class="lg:flex lg:w-1/3 w-full lg:m-3">
       <div class="w-full lg:m-2">
         <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline m-1" id="event_title" type="text" placeholder="イベントタイトル" value="通常練習">
         <h1 class="text-3xl m-1" id="event_start">YYYY年MM月DD日</h1>

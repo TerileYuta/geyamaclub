@@ -2,38 +2,44 @@
     require_once "../config.php";
     require_once "../idiorm.php";
     require_once "../log/add_log.php";
+    require_once "../decrypt.php";
 
-    try{
-        $all_member = ORM::for_table('member')->find_many();
-        $member_list = array();
-
-        foreach($all_member as $member){
-            $total_practice = $records = ORM::for_table('plan')->where_gt('date', $member["admission_date"])->count();
-
-            if(($member["attendance_number"] != 0) && ($total_practice != 0)){
-                $join_parcent = round(($member["attendance_number"] / $total_practice) * 100);
-            }else{
-                $join_parcent = "-";
+    if(key_check(basename(dirname(__FILE__)))){
+        try{
+            $all_member = ORM::for_table('member')->find_many();
+            $member_list = array();
+    
+            foreach($all_member as $member){
+                $total_practice = $records = ORM::for_table('plan')->where_gt('date', $member["admission_date"])->count();
+    
+                if(($member["attendance_number"] != 0) && ($total_practice != 0)){
+                    $join_parcent = round(($member["attendance_number"] / $total_practice) * 100);
+                }else{
+                    $join_parcent = "-";
+                }
+                
+                $member_info = array("id" => $member["id"],
+                                    "name" => $member["name"],
+                                    "attendance" => $member["attendance_number"],
+                                    "last_entry" => $member["last_entry_date"],
+                                    "join_at" => $member["admission_date"],
+                                    "total_practice" => $total_practice,
+                                    "join_parcent" => $join_parcent,
+                                    "memo" => $member["memo"]);
+    
+                array_push($member_list, $member_info);
             }
-            
-            $member_info = array("id" => $member["id"],
-                                "name" => $member["name"],
-                                "attendance" => $member["attendance_number"],
-                                "last_entry" => $member["last_entry_date"],
-                                "join_at" => $member["admission_date"],
-                                "total_practice" => $total_practice,
-                                "join_parcent" => $join_parcent,
-                                "memo" => $member["memo"]);
-
-            array_push($member_list, $member_info);
+        }catch(Exception $e){
+            add_log("error",  "サーバー接続エラー||". $e);
+            header("Location: ../Error");
         }
-    }catch(Exception $e){
-        add_log("Error", $_SERVER["REMOTE_ADDR"], "サーバー接続エラー||". $e);
+    
+        $count = 0;
+    }else{
+        add_log("main", "membersページのキー認証に失敗しました");
+
         header("Location: ../Error");
     }
-
-    $count = 0;
-
 ?>
 <!DOCTYPE html>
 <head>
@@ -80,6 +86,5 @@
         </table>
     </div>
     <?php include "../layout/script.html";?>
-    <script type="text/javascript" src="./index.js"></script>
 </body>
 </html>

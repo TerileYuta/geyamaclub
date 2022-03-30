@@ -12,6 +12,7 @@
 
     require_once "../config.php";
     require_once "../idiorm.php";
+    require_once "../log/add_log.php";
 
     $message = $_POST["message"];
     $status = $_POST["status"];
@@ -32,4 +33,6 @@
 
     $textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
     $response = $bot->pushMessage('Cb47f4ae2e1dd7de087bfe37b351d99c3', $textMessageBuilder);
+
+    add_log("main", "練習ID". $practice_id. "の練習参加の募集を始めました");
 ?>

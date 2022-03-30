@@ -1,6 +1,7 @@
 <?php
     require_once "../config.php";
     require_once "../idiorm.php";
+    require_once "../log/add_log.php";
 
     $title = $_POST["title"];
     $income = (int) $_POST['income'];
@@ -104,6 +105,8 @@
         ->set('last_entry_date', $date)
         ->save();
     }
+
+    add_log("main", "練習ID". $practice_id. "の決済が確定されました");
 
     echo $practice_id;
 ?>

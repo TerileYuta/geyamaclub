@@ -1,6 +1,7 @@
 <?php
     require_once "../config.php";
     require_once "../idiorm.php";
+    require_once "../log/add_log.php";
 
     $name = $_POST['name'];
     $type = $_POST['type'];
@@ -24,4 +25,6 @@
     $new_settlement -> action = $action;
     $new_settlement -> balance = $balance;
     $new_settlement -> save();
+
+    add_log("main", "財政ID" ($max_id + 1). "を記録しました");
 ?>

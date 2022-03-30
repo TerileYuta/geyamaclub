@@ -102,11 +102,11 @@ class Reply{
             $person->admission_date = date("Y-m-d H:i:s");
             $person->save();
 
-            add_log("Debug", $_SERVER["REMOTE_ADDR"], $name. "さんが会員登録を完了させました". "//Linebot/sign_up()");
+            add_log("main",$name. "さんが会員登録を完了させました");
 
             return "GeyamaWebへの会員登録ありがとうございます！！". $name. "さん！";
         }catch(Exception $e){
-            add_log("Error", $_SERVER["REMOTE_ADDR"], "データベース接続エラー||".$e. "//Linebot/sign_up()");
+            add_log("error", "データベース接続エラー || ".$e);
 
             return  "エラーが発生しました。再度登録をお願いいたします";
         }
@@ -134,6 +134,8 @@ class Reply{
                 ->set('member', $line_id. ".". $practice_member)
                 ->save();
         
+                add_log("main", $name. "さんの参加を確認しました");
+
                 return $name. "さんの". date("Y年n月j日", strtotime($practice_date)). "(". $practice_time. ")の練習への参加を確認しました";
             }else{
                 return $name. "さんの". date("Y年n月j日", strtotime($practice_date)). "(". $practice_time. ")の練習への参加を確認しました";
@@ -171,6 +173,8 @@ class Reply{
                 ORM::for_table('plan')->where(array("id" => $practice_id))->find_result_set()
                 ->set('member', $practice_member)
                 ->save();
+
+                add_log("main", $name. "さんの参加キャンセルを確認しました");
         
                 return $name. "さんの". date("Y年n月j日", strtotime($practice_date)). "(". $practice_time. ")の練習への参加のキャンセルを確認しました";
             }else{

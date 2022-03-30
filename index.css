@@ -88,7 +88,7 @@ body{
 
 .animation_reverse{
   animation-name: anime_reverse;
-  animation-duration: 0.25s;
+  animation-duration: 0.15s;
   animation-iteration-count: 1;
   animation-timing-function: linear;
   animation-direction: both;
@@ -96,7 +96,7 @@ body{
 
 .animation{
   animation-name: anime;
-  animation-duration: 0.25s;
+  animation-duration: 0.15s;
   animation-iteration-count: 1;
   animation-timing-function: linear;
   animation-direction: both;

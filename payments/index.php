@@ -1,45 +1,51 @@
 <?php
     require_once "../config.php";
     require_once "../idiorm.php";
+    require_once "../decrypt.php";
 
-    try{
-        $payments_list = ORM::for_table('payments')->order_by_desc("id")->find_many();
-
-        $latest_id = $payments_list[0]["id"];
-        $payments = array();
-        $date = array();
-        foreach($payments_list as $payment){
-            $list = array(
-                "name" => $payment['name'],
-                "balance" => $payment['balance'],
-                "action" => $payment['action'],
-                "type" => $payment['type'],
-                "practice_id" => $payment['practice_id'],
-                "update_date" => $payment['update_date']
-            );
-
-            $id = $payment['id'];
-            $month = date("Y-m", strtotime($payment["update_date"]));
-
-            if(isset($date[$month])){
-                $date_list = $date[$month];
-            }else{
-                $date_list = array();
+    if(key_check(basename(dirname(__FILE__)))){
+        try{
+            $payments_list = ORM::for_table('payments')->order_by_desc("id")->find_many();
+    
+            $latest_id = $payments_list[0]["id"];
+            $payments = array();
+            $date = array();
+            foreach($payments_list as $payment){
+                $list = array(
+                    "name" => $payment['name'],
+                    "balance" => $payment['balance'],
+                    "action" => $payment['action'],
+                    "type" => $payment['type'],
+                    "practice_id" => $payment['practice_id'],
+                    "update_date" => $payment['update_date']
+                );
+    
+                $id = $payment['id'];
+                $month = date("Y-m", strtotime($payment["update_date"]));
+    
+                if(isset($date[$month])){
+                    $date_list = $date[$month];
+                }else{
+                    $date_list = array();
+                }
+    
+                array_push($date_list, $id);
+                $date[$month] = $date_list;
+    
+                $payments[$id] = $list;
             }
+    
+            $payments = json_encode($payments);
+            $date = json_encode($date);
+        }catch(Exception $e){
+            add_log("error", "データベース接続エラー || ". $e);
+            header("Location: ../Error");
+        }    
+    }else{
+        add_log("main", "paymentsページのキー認証に失敗しました");
 
-            array_push($date_list, $id);
-            $date[$month] = $date_list;
-
-            $payments[$id] = $list;
-        }
-
-        $payments = json_encode($payments);
-        $date = json_encode($date);
-    }catch(Exception $e){
-        add_log("Error", $_SERVER["REMOTE_ADDR"], "データベース接続エラー||payment");
         header("Location: ../Error");
     }
-
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -70,7 +76,7 @@
     </div>
     <div class="p-3 w-full lg:m-5 m-3 mt-3 rounded-lg h-full" id="info_screen">
         <div class="lg:flex p-2 bg-white">
-            <div class="md:w-1/3">                 
+            <div class="lg:w-1/3">                 
                 <div class="h-32 m-2">
                     <h1 class="text-gray-600">残高</h1>
                     <h1 class="text-6xl m-2 font-bold" id="balance"></h1>
@@ -84,7 +90,7 @@
                     <h1 class="flex-1 text-xl font-bold" id="ave_balance"></h1>
                 </div>
             </div>
-            <div class="md:w-2/3 lg:block hidden">
+            <div class="lg:w-2/3 lg:block hidden">
                 <canvas id="balance_chart"></canvas>
             </div>
         </div>

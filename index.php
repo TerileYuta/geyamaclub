@@ -1,14 +1,38 @@
 <?php
     require_once "./config.php";
     require_once "./idiorm.php";
+
     ini_set('display_errors', 0);
 
     session_start();
-    if(!isset($_SESSION["login_flag"])){    
-        if(!$_SESSION["login_flag"]){
+
+    $ip = $_SERVER["REMOTE_ADDR"];
+
+    if(!isset($_POST['password'])){
+        if(isset($_SESSION['pass'])){
+            if(hash("md4", "geyamaclub") != $_SESSION['pass']){
+                header("Location: ./Login");
+            }
+        }else{
             header("Location: ./Login");
         }
-    }
+    }else{
+        $password = $_POST['password'];
+
+        if(password_verify($password, '$2y$10$PMuup4WteowqaUIkaDNhKejBmp5zZ6BSzDLGk6q.RV4tyh2Ss2lbS')){
+            $now = date("Y-m-d H:i:s");
+            $log = "[". $now. "] (main)". " : 「". $ip. "」がログインしました。". "\n"; 
+            file_put_contents("./log/main.txt", $log, FILE_APPEND);
+
+            $_SESSION["pass"] = hash("md4",$password);
+        }else{
+            $now = date("Y-m-d H:i:s");
+            $log = "[". $now. "] (main)". " : 「". $ip. "」がログインに失敗しました。(". $password .")". "\n"; 
+            file_put_contents("./log/main.txt", $log, FILE_APPEND);
+
+            header("Location: ./Login");
+        }
+    }    
 ?>
 
 <!DOCTYPE html>
@@ -66,10 +90,10 @@
                 </div>
             </div>
             <div class="md:flex-auto bg-gray-200 ml-20 lg:ml-0">
-                <div class="flex justify-center bg-white py-2">
+                <div class="flex justify-center bg-white py-2" id="ad">
                     <script type="text/javascript" src="https://cache1.value-domain.com/xa.j?site=geyamaclub.s203.xrea.com"></script>
                 </div>
-                <iframe src="./Practice/" frameborder="0" class="w-full overflow-scroll" style="height: 90%;" id="content_frame"></iframe>
+                <iframe src="./Practice/" frameborder="0" class="w-full overflow-scroll" style="height: 90%;"  name="content_frame" id="content_frame"></iframe>
             </div>
         </div>
     </div>

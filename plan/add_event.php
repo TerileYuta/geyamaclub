@@ -1,6 +1,7 @@
 <?php
     require_once "../config.php";
-    require_once "../idiorm.php";   
+    require_once "../idiorm.php";  
+    require_once "../log/add_log.php"; 
 
     $title = $_POST["title"];
     $date = $_POST["date"];
@@ -15,4 +16,5 @@
     $add_event -> place = $place;
     $add_event -> save();
 
+    add_log("main", $title. "-". $date. "-(". $start_time. "-". $end_time. ")が追加されました");
 ?>

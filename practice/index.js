@@ -159,7 +159,7 @@ function update_data(plan){
 
         Object.keys(member_list[id]).forEach(key => {
             newCell1 = newRow.insertCell();
-            newCell1.className = "border px-4 py-2";
+            newCell1.className = "border px-4 py-2 lg:table-cell hidden";
             newCell1.appendChild(document.createTextNode(member_list[id][key]));
         });
     });

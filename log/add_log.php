@@ -1,8 +1,8 @@
 <?php
-    function add_log($type, $ip, $str){
+    function add_log($type, $str){
         $now = date("Y-m-d H:i:s");
-        $log = $now. " [". $type. "] (". $ip. ") ". " : ". $str. "\n"; 
-        file_put_contents("./log.txt", $log, FILE_APPEND);
+        $log = "[". $now. "] (". $type. ")". " : ". $str. "\n"; 
+        file_put_contents("../log/log.txt", $log, FILE_APPEND);
     }
 
 ?>

@@ -63,8 +63,8 @@ add_event.addEventListener("click", () => {
     const params = new URLSearchParams();
     params.append("title", event_title.value);
     params.append("date", date);
-    params.append("start_time", start_time);
-    params.append("end_time", end_time);
+    params.append("start_time", start_time.value);
+    params.append("end_time", end_time.value);
     params.append("place", place.value);
 
     axios.post("add_event.php", params);
@@ -81,7 +81,7 @@ delete_event.addEventListener("click", () => {
     const params = new URLSearchParams();
     params.append("date", date);
 
-    axios.post("remove_event.php", params);
+    axios.post("delete_event.php", params);
 
     calendar.getEventById(date).remove();
     calendar.render();

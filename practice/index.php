@@ -1,26 +1,34 @@
 <?php
     require_once "../config.php";
     require_once "../idiorm.php";
+    require_once "../decrypt.php";
+    require_once "../log/add_log.php";
 
-    $today = date("Y-m-d H:i:s");
-
-    try{
-        $plan_list = ORM::for_table('plan')->find_many();
-        $plan_date = array();
-        
-        foreach($plan_list as $plan){
-            array_push($plan_date, $plan["date"]);
+    if(key_check(basename(dirname(__FILE__)))){
+        $today = date("Y-m-d H:i:s");
+    
+        try{
+            $plan_list = ORM::for_table('plan')->find_many();
+            $plan_date = array();
+            
+            foreach($plan_list as $plan){
+                array_push($plan_date, $plan["date"]);
+            }
+    
+            $plan_date = json_encode($plan_date);
+    
+            $max_id = ORM::for_table('payments')->max('id'); 
+            $balance = ORM::for_table('payments')->where(array("id" => $max_id))->find_one();
+            $balance = $balance["balance"];
+            $all_member_number = count(ORM::for_table('member')->find_result_set());       
+        }catch(Exception $e){
+            add_log("error", "データベース接続エラー || " . $e);
         }
-
-        $plan_date = json_encode($plan_date);
-
-        $max_id = ORM::for_table('payments')->max('id'); 
-        $balance = ORM::for_table('payments')->where(array("id" => $max_id))->find_one();
-        $balance = $balance["balance"];
-        $all_member_number = count(ORM::for_table('member')->find_result_set());       
-    }catch(Exception $e){
-        echo "サーバー接続エラー";
+    }else{
+        add_log("main", "practiceページのキー認証に失敗しました");
+        header("Location: ../Error");
     }
+
 
 ?>
 <!DOCTYPE html>
@@ -98,7 +106,7 @@
                 <div class="flex-1 m-1">
                     <h1 class="text-xl mx-1 font-bold">募集状況</h1>
                 </div>
-                <div class="inline-block relative w-64 flex-1 m-1">
+                <div class="inline-block relative w-full flex-1 m-1">
                     <select id="status_select" class="block appearance-none w-full bg-white border hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
                         <option value="0">未募集</option>
                         <option value="1">募集中</option>
@@ -116,7 +124,7 @@
                     <h1 class="text-xl m-1">参加費</h1>
                 </div>
                 <div class="flex-1 m-1">
-                    <input class="bg-gray-200 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 income_obj control" id="participation_fee" type="number">
+                    <input class="bg-gray-200 w-full lg:w-64 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 income_obj control" id="participation_fee" type="number">
                     <nobr class="text-xl m-1">円</nobr>
                 </div>
             </div>
@@ -125,9 +133,9 @@
                     <h1 class="text-xl m-1">その他</h1>
                 </div>
                 <div class="flex-1 m-1">
-                    <input class="bg-gray-200 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 income_obj control" id="income_other" type="number">
+                    <input class="bg-gray-200 w-full lg:w-64 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 income_obj control" id="income_other" type="number">
                     <nobr class="text-xl m-1">円</nobr>
-                    <input class="bg-gray-200 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 income_obj my-2 w-64 lg:w-full control" id="income_other_memo" type="text" placeholder="メモ">
+                    <input class="bg-gray-200 w-full lg:w-64 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 income_obj my-2 w-64 lg:w-full control" id="income_other_memo" type="text" placeholder="メモ">
                 </div>
             </div>
             <div class="w-full m-2">
@@ -140,7 +148,7 @@
                     <h1 class="text-xl m-1">体育館代</h1>
                 </div>
                 <div class="flex-1 m-1">
-                    <input class="bg-gray-200 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 spending_obj control" id="gym_input" type="number">
+                    <input class="bg-gray-200 w-full lg:w-64 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 spending_obj control" id="gym_input" type="number">
                     <nobr class="text-xl m-1">円</nobr>
                 </div>
             </div>
@@ -149,7 +157,7 @@
                     <h1 class="text-xl m-1">シャトル代</h1>
                 </div>
                 <div class="flex-1 m-1">
-                    <input class="bg-gray-200 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 spending_obj control" id="shattle_input" type="number">
+                    <input class="bg-gray-200 w-full lg:w-64 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 spending_obj control" id="shattle_input" type="number">
                     <nobr class="text-xl m-1">円</nobr>
                 </div>
             </div>
@@ -158,9 +166,9 @@
                     <h1 class="text-xl m-1">その他</h1>
                 </div>
                 <div class="flex-1 m-1">
-                    <input class="bg-gray-200 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 spending_obj control" id="other_input" type="number">
+                    <input class="bg-gray-200 w-full lg:w-64 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 spending_obj control" id="other_input" type="number">
                     <nobr class="text-xl m-1">円</nobr>
-                    <input class="bg-gray-200 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 income_obj my-2 w-64 lg:w-full control" id="other_memo" type="text" placeholder="メモ">
+                    <input class="bg-gray-200 w-full lg:w-64 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 income_obj my-2 w-64 lg:w-full control" id="other_memo" type="text" placeholder="メモ">
                 </div>
             </div>
             <div class="lg:flex w-full m-2">

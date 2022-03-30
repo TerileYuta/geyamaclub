@@ -1,6 +1,17 @@
 <?php
-    $log_file = "../log/log.txt";
-    $log_list = file($log_file);
+    require_once "../decrypt.php";
+    require_once "../log/add_log.php";
+
+    if(key_check(basename(dirname(__FILE__)))){
+        $log_file = "../log/log.txt";
+        $log_list = file($log_file);
+        $log_list = array_reverse($log_list);
+    }else{
+        add_log("main", "settingページのキー認証に失敗しました");
+
+        header("Location: ../Error");
+    }
+
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -26,9 +37,11 @@
         <div class="flex-1 text-center p-1 bg-white rounded-lg mx-1 cursor-pointer" id="log_btn">
             <h1 class="text-xl font-bold">ログ</h1>
         </div>
+        <!--
         <div class="flex-1 text-center p-1 bg-white rounded-lg mx-1 cursor-pointer" id="backup_btn">
             <h1 class="text-xl font-bold">バックアップ</h1>
         </div>
+        -->
     </div>
     <!--
     <div class="rounded-lg" id="setting_screen">
@@ -75,9 +88,9 @@
     </div>
     -->
 
-    <div class="p-3 bg-white m-8 rounded-lg" id="log_screen">
+    <div class="p-3 bg-white m-8 mt-4 rounded-lg" id="log_screen">
         <?php foreach ($log_list as $log){?>
-            <h1 class="text-xl"><?php echo $log?></h1>
+            <h1 class="text-lg"><?php echo $log?></h1>
         <?php }?>    
     </div>
 
