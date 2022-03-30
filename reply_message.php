@@ -54,6 +54,11 @@ function main($type, $data){
                 $text = $reply->cancel_practice($data);
 
                 break;
+            
+            case "！グループ":
+                $text = $group_id;
+
+                break;
         }
     }
 
@@ -75,7 +80,7 @@ class Reply{
         $response = $bot->getGroupMemberProfile($group_id, $line_id);
         if ($response->isSucceeded()) {
             $profile = $response->getJSONDecodedBody();
-            $name = $profile['displayName'] || "";
+            $name = $profile['displayName'];
         }
 
         $this->name = $name;

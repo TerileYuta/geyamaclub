@@ -19,6 +19,8 @@ if(locations != ""){
         params = url.searchParams;
         request_date = params[0];
     }
+}else{
+    form_post("practice");
 }
 
 practice.addEventListener("click", () => {change_view("practice")});

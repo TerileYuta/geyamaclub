@@ -11,7 +11,7 @@
                         <img src="https://ss1.xrea.com/geyamaclub.s203.xrea.com/geyamaclub/Image/logo.png" class="w-20 h-20" alt="">
                     </div>
                     <h3 class="text-2xl font-bold text-center">Login to your account</h3>
-                    <form action="../#practice" method="post" enctype="multipart/form-data">
+                    <form action="../" method="post" enctype="multipart/form-data">
                         <div class="mt-4">
                             <div class="mt-4">
                                 <label class="block">Password<label>
