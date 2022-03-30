@@ -8,7 +8,6 @@
     header("Access-Control-Allow-Origin: *");
     header("Access-Control-Allow-Headers: Origin, X-Requested-With");
 
-    require_once(__DIR__."/vendor/autoload.php");
 
     require "./config.php";
     require "./log/add_log.php";
