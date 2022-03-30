@@ -5,7 +5,6 @@ use LINE\LINEBot\MessageBuilder\TextMessageBuilder;
 use LINE\LINEBot\MessageBuilder\MultiMessageBuilder;
 use \LINE\LINEBot\Constant\HTTPHeader;
 
-require __DIR__."/vendor/autoload.php";
 require "./config.php";
 require "./log/add_log.php";
 require "./vendor/autoload.php";
