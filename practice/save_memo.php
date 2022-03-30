@@ -1,6 +1,5 @@
 <?php
-    require_once "../config.php";
-    require_once "../idiorm.php";
+    require "../config.php";
 
     $memo = $_POST["memo"];
     $practice_id = $_POST["practice_id"];

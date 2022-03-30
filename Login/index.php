@@ -1,8 +1,3 @@
-<?php
-    ini_set('display_errors', 0);
-
-?>
-
 <!DOCTYPE html>
 <html lang="ja">
 <?php include "../layout/head.html"?>
@@ -13,7 +8,7 @@
             <div class="flex items-center justify-center min-h-screen rounded-lg">
                 <div class="px-8 py-6 mt-4 text-left bg-white shadow-lg">
                     <div class="flex justify-center">
-                        <img src="https://ss1.xrea.com/geyamaclub.s203.xrea.com/Image/logo.png" class="w-20 h-20" alt="">
+                        <img src="https://ss1.xrea.com/geyamaclub.s203.xrea.com/geyamaclub/Image/logo.png" class="w-20 h-20" alt="">
                     </div>
                     <h3 class="text-2xl font-bold text-center">Login to your account</h3>
                     <form action="../#practice" method="post" enctype="multipart/form-data">

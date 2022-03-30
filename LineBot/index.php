@@ -5,20 +5,21 @@ use LINE\LINEBot\MessageBuilder\TextMessageBuilder;
 use LINE\LINEBot\MessageBuilder\MultiMessageBuilder;
 use \LINE\LINEBot\Constant\HTTPHeader;
 
-require_once(__DIR__."/vendor/autoload.php");
-require_once "../config.php";
-require_once "../idiorm.php";
-require_once "../log/add_log.php";
+require __DIR__."/vendor/autoload.php";
+require "../config.php";
+require "../log/add_log.php";
+require "../vendor/autoload.php";
 
-define('TOKEN', "YbZQjiQrxyMA2Il6wVBSRydaJ6C1lrF4fYOJji7MX/kzhC4wMv9Af1owBZQGLqLHtSKXJlj1TlGt0pGKa81wgjArmQyF8wvxcnqUxfpeKY4H4l/9IcNmakWgvnVJcVdVx4Vd3C/l14yvWITNd2va+gdB04t89/1O/w1cDnyilFU=");
+Dotenv\Dotenv::createImmutable(__DIR__)->load();
+
+define('TOKEN', $_ENV["ACCESS_TOKEN"]);
+define('SECRECT', $_ENV["CHANNEL_SELECT"]);
 
 $jsonAry = json_decode(file_get_contents('php://input'), true);
 
 $type = $jsonAry['events'][0]['type'];
 $replyToken = $jsonAry['events'][0]['replyToken'];
 $data = $jsonAry['events'][0];
-
-$reply_message = "エラーが発生しました";
 
 $reply_message = main($type, $data);
 
@@ -43,19 +44,23 @@ function sending($response){
 }
 
 function main($type, $data){
-    $reply = new Reply();
-    $text = "エラーが発生しました";
+    $line_id = $data["source"]["userId"];
+    $group_id = $data["source"]["groupId"];
+
+    $reply = new Reply($line_id, $group_id);
+    $text = "";
 
     if($type == 'message'){
-        $user_input = $data['message']["text"];
-        switch($user_input){
+        $user_message = $data['message']["text"];
+
+        switch($user_message){
             case "！新規会員登録":
-                $text = $reply->sign_up($data);
+                $text = $reply->sign_up();
                 
                 break;
 
             case "！行きます":
-                $text = $reply->join_practice($data);
+                $text = $reply->join_practice();
 
                 break;
             
@@ -63,48 +68,55 @@ function main($type, $data){
                 $text = $reply->cancel_practice($data);
 
                 break;
-
-            default:
-                $text = "";
         }
-    }else{
-
     }
 
     return $text;
 }
 
 class Reply{
-    private function get_profile($line_id){
-        $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient('YbZQjiQrxyMA2Il6wVBSRydaJ6C1lrF4fYOJji7MX/kzhC4wMv9Af1owBZQGLqLHtSKXJlj1TlGt0pGKa81wgjArmQyF8wvxcnqUxfpeKY4H4l/9IcNmakWgvnVJcVdVx4Vd3C/l14yvWITNd2va+gdB04t89/1O/w1cDnyilFU=');
-        $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => '23e57496ac4ca983afe0dd6ec66e0bad']);
-        
-        $response = $bot->getProfile($line_id);
+    public $line_id;
+    public $group_id;
+    public $name;
+
+    public function __construct($line_id, $group_id){
+        $this->line_id = $line_id;
+        $this->group_id = $group_id;
+
+        $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient(TOKEN);
+        $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => SECRECT]);
+
+        $response = $bot->getGroupMemberProfile($group_id, $line_id);
         if ($response->isSucceeded()) {
             $profile = $response->getJSONDecodedBody();
-            $name = $profile['displayName'];
-            $pic_url = $profile['pictureUrl'];
+            $name = $profile['displayName'] || "";
         }
 
-        return array("name" => $name, "picUrl" => $pic_url);
+        $this->name = $name;
     }
 
-    public function sign_up($data){
-        $line_id = $data["source"]["userId"];
-        $profile = $this->get_profile($line_id);
-        $name = $profile["name"];
+    private function get_practice(){
+        $practice = ORM::for_table('plan')
+        ->where(array(
+            'status' => "1",
+        ))
+        ->find_one();
 
+        return array("id" => $practice['id'], "member" => $practice['member'], "date" => $practice['date'], "time" => $practice["time"]);
+    }
+
+    public function sign_up(){
         try{
             $person = ORM::for_table('member')->create();
-            $person->name = $profile["name"];
-            $person->line_id = $line_id;
-            $person->pic_url = $profile["picUrl"];
+            $person->name = $this->name;
+            $person->line_id = $this->name;
+            $person->pic_url = "";
             $person->admission_date = date("Y-m-d H:i:s");
             $person->save();
 
-            add_log("main",$name. "さんが会員登録を完了させました");
+            add_log("main", $this->name. "さんが会員登録を完了させました");
 
-            return "GeyamaWebへの会員登録ありがとうございます！！". $name. "さん！";
+            return "GeyamaWebへの会員登録ありがとうございます!!". $this->name. "さん！";
         }catch(Exception $e){
             add_log("error", "データベース接続エラー || ".$e);
 
@@ -112,16 +124,8 @@ class Reply{
         }
     }
 
-    public function join_practice($data){
-        $line_id = $data["source"]["userId"];
-        $profile = $this->get_profile($line_id);
-        $name = $profile['name'];
-
-        $practice = ORM::for_table('plan')
-                ->where(array(
-                    'status' => "1",
-                ))
-                ->find_one();
+    public function join_practice(){
+        $practice = $this->get_practice();
 
         $practice_id = $practice["id"];
         $practice_member = $practice["member"];
@@ -129,32 +133,24 @@ class Reply{
         $practice_time = $practice["time"];
 
         if(isset($practice_id)){
-            if(!in_array($line_id, explode(".", $practice_member))){
+            if(!in_array($this->line_id, explode(".", $practice_member))){
                 ORM::for_table('plan')->where(array("id" => $practice_id))->find_result_set()
-                ->set('member', $line_id. ".". $practice_member)
+                ->set('member', $this->line_id. ".". $practice_member)
                 ->save();
         
-                add_log("main", $name. "さんの参加を確認しました");
+                add_log("main", $this->name. "さんの参加を確認しました");
 
-                return $name. "さんの". date("Y年n月j日", strtotime($practice_date)). "(". $practice_time. ")の練習への参加を確認しました";
+                return $this->name. "さんの". date("Y年n月j日", strtotime($practice_date)). "(". $practice_time. ")の練習への参加を確認しました";
             }else{
-                return $name. "さんの". date("Y年n月j日", strtotime($practice_date)). "(". $practice_time. ")の練習への参加を確認しました";
+                return $this->name. "さんの". date("Y年n月j日", strtotime($practice_date)). "(". $practice_time. ")の練習への参加を確認しました";
             }
         }else{
             return "現在募集中の練習はありません";
         }        
     }
 
-    public function cancel_practice($data){
-        $line_id = $data["source"]["userId"];
-        $profile = $this->get_profile($line_id);
-        $name = $profile['name'];
-        
-        $practice = ORM::for_table('plan')
-                ->where(array(
-                    'status' => "1",
-                ))
-                ->find_one();
+    public function cancel_practice(){        
+        $practice = $this->get_practice();
 
         $practice_id = $practice["id"];
         $practice_member = $practice["member"];
@@ -164,8 +160,8 @@ class Reply{
         if(isset($practice_id)){
             $practice_member_list = explode(".", $practice_member);
     
-            if(in_array($line_id, $practice_member_list)){
-                $practice_member_list = array_diff($practice_member_list, array($line_id));
+            if(in_array($this->line_id, $practice_member_list)){
+                $practice_member_list = array_diff($practice_member_list, array($this->line_id));
                 $practice_member_list = array_values($practice_member_list);
     
                 $practice_member = implode(".", $practice_member_list);
@@ -174,11 +170,11 @@ class Reply{
                 ->set('member', $practice_member)
                 ->save();
 
-                add_log("main", $name. "さんの参加キャンセルを確認しました");
+                add_log("main", $this->name. "さんの参加キャンセルを確認しました");
         
-                return $name. "さんの". date("Y年n月j日", strtotime($practice_date)). "(". $practice_time. ")の練習への参加のキャンセルを確認しました";
+                return $this->name. "さんの". date("Y年n月j日", strtotime($practice_date)). "(". $practice_time. ")の練習への参加のキャンセルを確認しました";
             }else{
-                return $name. "さんの". date("Y年n月j日", strtotime($practice_date)). "(". $practice_time. ")の練習への参加のキャンセルを確認しました";
+                return $this->name. "さんの". date("Y年n月j日", strtotime($practice_date)). "(". $practice_time. ")の練習への参加のキャンセルを確認しました";
             }
         }else{    
             return "現在募集中の練習はありません";

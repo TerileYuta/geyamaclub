@@ -1,8 +1,7 @@
 <?php
-  require_once "../config.php";
-  require_once "../idiorm.php";
-  require_once "../decrypt.php";
-  require_once "../log/add_log.php";
+    require "../config.php";
+    require "../decrypt.php";
+    require "../log/add_log.php";
 
   if(key_check(basename(dirname(__FILE__)))){
     try {

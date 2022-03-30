@@ -1,34 +1,32 @@
 <?php
-    require_once "./config.php";
-    require_once "./idiorm.php";
+    require "./vendor/autoload.php";
+    require_once "./decrypt.php";
 
-    ini_set('display_errors', 0);
+    Dotenv\Dotenv::createImmutable(__DIR__)->load();
+
+    //ini_set('display_errors', 0);
 
     session_start();
 
     $ip = $_SERVER["REMOTE_ADDR"];
 
     if(!isset($_POST['password'])){
-        if(isset($_SESSION['pass'])){
-            if(hash("md4", "geyamaclub") != $_SESSION['pass']){
-                header("Location: ./Login");
-            }
-        }else{
+        if(!isset($_SESSION['pass']) || ((hash("md4", "geyamaclub") != $_SESSION['pass']))){
             header("Location: ./Login");
         }
     }else{
         $password = $_POST['password'];
 
-        if(password_verify($password, '$2y$10$PMuup4WteowqaUIkaDNhKejBmp5zZ6BSzDLGk6q.RV4tyh2Ss2lbS')){
+        if(password_verify($password,  $_ENV["PASSWORD"])){
             $now = date("Y-m-d H:i:s");
             $log = "[". $now. "] (main)". " : 「". $ip. "」がログインしました。". "\n"; 
-            file_put_contents("./log/main.txt", $log, FILE_APPEND);
+            file_put_contents("./log/log.txt", $log, FILE_APPEND);
 
-            $_SESSION["pass"] = hash("md4",$password);
+            $_SESSION["pass"] = hash("md4", $password);
         }else{
             $now = date("Y-m-d H:i:s");
             $log = "[". $now. "] (main)". " : 「". $ip. "」がログインに失敗しました。(". $password .")". "\n"; 
-            file_put_contents("./log/main.txt", $log, FILE_APPEND);
+            file_put_contents("./log/log.txt", $log, FILE_APPEND);
 
             header("Location: ./Login");
         }

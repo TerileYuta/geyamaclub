@@ -1,7 +1,6 @@
 <?php
-    require_once "../config.php";
-    require_once "../idiorm.php";
-    require_once "../log/add_log.php";
+    require "../config.php";
+    require "../log/add_log.php";
 
     $name = $_POST['name'];
     $type = $_POST['type'];

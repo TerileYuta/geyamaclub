@@ -1,6 +1,5 @@
 <?php 
-    require_once "../config.php";
-    require_once "../idiorm.php";
+    require "../config.php";
 
     $name = $_POST['name'];
     $id = $_POST['id'];

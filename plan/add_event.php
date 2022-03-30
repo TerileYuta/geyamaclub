@@ -1,7 +1,7 @@
 <?php
-    require_once "../config.php";
-    require_once "../idiorm.php";  
-    require_once "../log/add_log.php"; 
+    require "../config.php";
+    require "../decrypt.php";
+    require "../log/add_log.php";
 
     $title = $_POST["title"];
     $date = $_POST["date"];

@@ -1,6 +1,5 @@
 <?php
-    require_once "../config.php";
-    require_once "../idiorm.php";
+    require "../config.php";
 
     header("Content-Type: application/json; charset=utf-8");
 

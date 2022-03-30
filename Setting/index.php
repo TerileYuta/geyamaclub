@@ -1,5 +1,5 @@
 <?php
-    require_once "../decrypt.php";
+    require_once "../vendor/autoload.php";
     require_once "../log/add_log.php";
 
     if(key_check(basename(dirname(__FILE__)))){

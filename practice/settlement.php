@@ -1,6 +1,5 @@
 <?php
-    require_once "../config.php";
-    require_once "../idiorm.php";
+    require "../config.php";
     require_once "../log/add_log.php";
 
     $title = $_POST["title"];
