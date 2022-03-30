@@ -179,7 +179,7 @@ status_select_obj.addEventListener("change", () => {
     params.append("status", status_select_obj.value);
     params.append("id", practice_id);
 
-    axios.post("https://ss1.xrea.com/geyamaclub.s203.xrea.com/LineBot/push_message.php", params)
+    axios.post("https://ss1.xrea.com/geyamaclub.s203.xrea.com/geyamaclub/push_message.php", params)
     .then(result => {
         Swal.fire({
             position: 'top-end',
@@ -196,6 +196,8 @@ status_select_obj.addEventListener("change", () => {
             showConfirmButton: false,
             timer: 3000
         });
+
+        console.log(err);
     });
 });
 

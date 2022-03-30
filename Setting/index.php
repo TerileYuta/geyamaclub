@@ -1,6 +1,7 @@
 <?php
-    require_once "../vendor/autoload.php";
-    require_once "../log/add_log.php";
+    require "../vendor/autoload.php";
+    require "../decrypt.php";
+    require "../log/add_log.php";
 
     if(key_check(basename(dirname(__FILE__)))){
         $log_file = "../log/log.txt";

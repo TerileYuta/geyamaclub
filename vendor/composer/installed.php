@@ -28,6 +28,15 @@
             'reference' => '0690bde05318336c7221785f2a932467f98b64ca',
             'dev_requirement' => false,
         ),
+        'linecorp/line-bot-sdk' => array(
+            'pretty_version' => '7.3.1',
+            'version' => '7.3.1.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../linecorp/line-bot-sdk',
+            'aliases' => array(),
+            'reference' => '0500634336ec1b524587a978b917b7b3a3679aef',
+            'dev_requirement' => false,
+        ),
         'phpoption/phpoption' => array(
             'pretty_version' => '1.8.1',
             'version' => '1.8.1.0',
