@@ -4,12 +4,12 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitb71a737c033a24efec0570d6d695dcb5
+class ComposerStaticInitdf27b182fb9095875ed790d714292a3f
 {
     public static $files = array (
-        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
-        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
+        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -22,10 +22,6 @@ class ComposerStaticInitb71a737c033a24efec0570d6d695dcb5
         'P' => 
         array (
             'PhpOption\\' => 10,
-        ),
-        'L' => 
-        array (
-            'LINE\\' => 5,
         ),
         'G' => 
         array (
@@ -54,10 +50,6 @@ class ComposerStaticInitb71a737c033a24efec0570d6d695dcb5
         array (
             0 => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption',
         ),
-        'LINE\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/linecorp/line-bot-sdk/src',
-        ),
         'GrahamCampbell\\ResultType\\' => 
         array (
             0 => __DIR__ . '/..' . '/graham-campbell/result-type/src',
@@ -69,6 +61,7 @@ class ComposerStaticInitb71a737c033a24efec0570d6d695dcb5
     );
 
     public static $classMap = array (
+        'AltoRouter' => __DIR__ . '/..' . '/altorouter/altorouter/AltoRouter.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
@@ -80,9 +73,9 @@ class ComposerStaticInitb71a737c033a24efec0570d6d695dcb5
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitb71a737c033a24efec0570d6d695dcb5::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitb71a737c033a24efec0570d6d695dcb5::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitb71a737c033a24efec0570d6d695dcb5::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitdf27b182fb9095875ed790d714292a3f::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitdf27b182fb9095875ed790d714292a3f::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitdf27b182fb9095875ed790d714292a3f::$classMap;
 
         }, null, ClassLoader::class);
     }
