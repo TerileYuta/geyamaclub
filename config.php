@@ -1,6 +1,6 @@
 <?php
-    require_once 'idiorm.php';
-    require __DIR__ ."/vendor/autoload.php";
+    require_once './idiorm.php';
+    require "./vendor/autoload.php";
 
     Dotenv\Dotenv::createImmutable(__DIR__)->load();
 

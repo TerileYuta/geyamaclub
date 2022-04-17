@@ -19,6 +19,15 @@
             'reference' => NULL,
             'dev_requirement' => false,
         ),
+        'altorouter/altorouter' => array(
+            'pretty_version' => '2.0.2',
+            'version' => '2.0.2.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../altorouter/altorouter',
+            'aliases' => array(),
+            'reference' => 'f6fede4f94ced7c22ba63a9b8af0bf2dc38e3cb2',
+            'dev_requirement' => false,
+        ),
         'graham-campbell/result-type' => array(
             'pretty_version' => 'v1.0.4',
             'version' => '1.0.4.0',
@@ -26,15 +35,6 @@
             'install_path' => __DIR__ . '/../graham-campbell/result-type',
             'aliases' => array(),
             'reference' => '0690bde05318336c7221785f2a932467f98b64ca',
-            'dev_requirement' => false,
-        ),
-        'linecorp/line-bot-sdk' => array(
-            'pretty_version' => '7.3.1',
-            'version' => '7.3.1.0',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../linecorp/line-bot-sdk',
-            'aliases' => array(),
-            'reference' => '0500634336ec1b524587a978b917b7b3a3679aef',
             'dev_requirement' => false,
         ),
         'phpoption/phpoption' => array(
