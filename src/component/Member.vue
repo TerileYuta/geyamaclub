@@ -6,7 +6,7 @@
                 <tr>
                 <th class="px-4 py-2">ID</th>
                 <th class="px-4 py-2">氏名</th>
-                <th class="px-4 py-2 lg:table-cell hidden">参加回数</th>
+                <th class="px-4 py-2 lg:table-cell hidden"></th>
                 <th class="px-4 py-2 lg:table-cell hidden">開催数</th>
                 <th class="px-4 py-2 lg:table-cell hidden">参加率</th>
                 <th class="px-4 py-2 lg:table-cell hidden">最終参加日</th>
@@ -33,13 +33,15 @@
         data(){
             return{
                 member_list: null,
+                load: false
             }
         },
 
         mounted: async function(){
             const res = await axios.post("./member/index");
 
-            this.member_list = res.data
+            this.member_list = res.data;
+            //this.load = true;
         }
     }
 </script>
