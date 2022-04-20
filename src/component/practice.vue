@@ -195,7 +195,7 @@
     module.exports = {
         data(){
             return {
-                info: "null",
+                load: false,
                 plan_date: null,
                 balance: null,
                 total_balance: null,
@@ -350,7 +350,7 @@
             status_change:async function(){
                 let text = "";
 
-                if(this.recruitment_status){
+                if(this.recruitment_status == 1){
                     text = `${this.practice_date}の練習の参加を募集し始めました。`
                 }else{
                     text = `${this.practice_date}の練習の参加を募集を終了しました。`
@@ -361,7 +361,7 @@
                 params.append("status", this.recruitment_status)
                 params.append("id", this.practice_id)
 
-                const res = await axios.post("https://ss1.xrea.com/geyamaclub.s203.xrea.com/geyamaclub/push_message.php", params)
+                const res = await axios.post("https://ss1.xrea.com/geyamaclub.s203.xrea.com/geyamaclub/line/push", params)
 
                 console.log(res)
             },
