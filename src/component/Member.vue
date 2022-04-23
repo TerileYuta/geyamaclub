@@ -38,10 +38,24 @@
         },
 
         mounted: async function(){
+            this.print_log("メンバー取得中", "info", true)
+
             const res = await axios.post("./member/index");
 
-            this.member_list = res.data;
+            if(res.data == "error"){
+                this.print_log("メンバー取得失敗", "error", false)
+            }else{
+                this.print_log("メンバー取得完了", "success", false)
+                this.member_list = res.data;
+            }
+
             //this.load = true;
+        },
+
+        methods:{
+            print_log:function(msg, type, option){
+                this.$emit("log", msg, type, option)
+            }
         }
     }
 </script>

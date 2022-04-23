@@ -85,12 +85,20 @@
             </router-link>
         </div>
         <div class="md:flex-auto bg-gray-200 ml-20 lg:ml-0">
-            <div class="flex justify-center bg-white py-2" id="ad">
-                <script type="text/javascript"
-                    src="https://cache1.value-domain.com/xa.j?site=geyamaclub.s203.xrea.com"></script>
+            <div class="lg:flex lg:justify-center bg-white py-2" id="ad">
+                <div class="flex-1">
+                    <script type="text/javascript"
+                        src="https://cache1.value-domain.com/xa.j?site=geyamaclub.s203.xrea.com"></script>
+                </div>
+                <div class="justify-end text-right" :class="{'hidden': (log_msg == '')}">
+                    <div class="flex m-1 mr-0 lg:w-64 w-full h-12 px-2 py-2 text-left border-t border-b" :class="{'bg-gray-100 border-gray-500 text-gray-700': (log_type == 'info'), 'bg-green-100 border-green-500 text-green-700': (log_type == 'success'), 'bg-red-100 border-red-500 text-red-700': (log_type == 'error'), 'bg-yellow-100 border-yellow-500 text-yellow-700': (log_type == 'warning')}">
+                        <div class="animate-spin w-8 h-8 border-4 border-b border-r border-l rounded-full mr-2" :class="{'hidden': !log_option,'border-gray-500': log_option && (log_type == 'info'), 'border-green-500': log_option && (log_type == 'success'), 'border-red-500': log_option && (log_type == 'error'), 'border-yellow-500': log_option && (log_type == 'warning')}"></div>
+                        <h1 class="text-lg">{{log_msg}}</h1>
+                    </div>
+                </div>
             </div>
             <div class="w-full overflow-y-scroll" id="frame">
-                <router-view></router-view>
+                <router-view @log="log"></router-view>
             </div>
         </div>
     </div>

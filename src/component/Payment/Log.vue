@@ -1,4 +1,4 @@
-<template>
+ <template>
     <div class="bg-white m-3 p-2 rounded-lg">    
         <h1 class="text-gray-400">決済履歴</h1>
         <table class="table-fixed w-full text-center">

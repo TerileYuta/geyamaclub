@@ -6,7 +6,7 @@ window.onload = () => {
 const routes = [
     {
         path: '/practice',
-        component: httpVueLoader("./src/component/practice.vue")
+        component: httpVueLoader("./src/component/Practice.vue")
     },
     {
         path: '/plan',
@@ -39,8 +39,22 @@ var app = new Vue({
     data(){
         return{
             anime_active: false,
-            anime_reverse_active: true
+            anime_reverse_active: true,
+
+            log_msg: null,
+            log_type: null,
+            log_option: false
         }
+    },
+
+    updated() {
+        setTimeout(() => {
+            if(this.log_option == false) {
+                this.log_msg = ""
+            }
+            }
+            ,3000
+        )
     },
 
     methods: {
@@ -51,6 +65,13 @@ var app = new Vue({
             document.querySelectorAll(".hide_object").forEach(e =>{
                 e.classList.toggle("hidden");
             });
+        },
+
+        log:function(msg, log_type, option){
+            this.log_msg = msg
+            this.log_type = log_type
+            this.log_option = option
+            
         }
     }
 });

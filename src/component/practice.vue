@@ -6,8 +6,8 @@
                     <path d="M3.86 8.753l5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"></path>
                 </svg>
             </div>
-            <div class="flex-1 h-16 bg-white p-3 text-center rounded-full m-2">
-                <h1 class="font-bold text-xs lg:text-3xl">{{title}}-{{practice_date}}({{practice_time}})</h1>
+            <div class="flex-1 h-16 bg-white p-3 pt-2 text-center rounded-full m-2">
+                <h1 class="font-bold text-xs lg:text-3xl" :class="{'animate-pulse bg-gray-200 h-12 w-10/12 mx-auto rounded': !load}"><span :class="{'hidden': !load}">{{title}}-{{practice_date}}({{practice_time}})</span></h1>
             </div>
             <div class="w-16 h-16 rounded-full m-2 pt-2 pl-1 bg-white cursor-pointer" @click="next">
                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
@@ -25,8 +25,8 @@
                 </div>
                 <div class="mt-8">
                     <h1 class="text-gray-600">参加人数</h1>
-                    <h1 class="text-5xl font-bold m-1">{{member_number}}</h1>
-                    <h1 class="text-2xl m-1">({{member_parcent}}%)</h1>
+                    <h1 class="text-5xl font-bold m-1" :class="{'animate-pulse bg-gray-200 h-12 w-24 rounded': !load}">{{member_number}}</h1>
+                    <h1 class="text-2xl m-1" :class="{'animate-pulse bg-gray-200 h-6 w-12 rounded': !load}"><span :class="{'hidden': !load}">(</span>{{member_parcent}}<span :class="{'hidden': !load}">%)</span></h1>
                 </div>
             </div>
             <div class="flex-1 h-48 p-2 bg-white m-5 rounded-lg flex">
@@ -41,11 +41,11 @@
                     <h1 class="text-gray-600 mt-8">練習収益</h1>
                     <div class="w-full flex">
                         <div class="flex-1 lg:block hidden">
-                            <h1 class="text-2xl m-2 text-green-400">↑￥{{income}}</h1>
-                            <h1 class="text-2xl m-2 text-red-400">↓￥{{spending}}</h1>
+                            <h1 class="text-2xl m-2 text-green-400" :class="{'animate-pulse bg-gray-200 h-6 w-12 mx-auto rounded': !load}"><span :class="{'hidden': !load}">↑￥</span>{{income}}</h1>
+                            <h1 class="text-2xl m-2 text-red-400" :class="{'animate-pulse bg-gray-200 h-6 w-12 mx-auto rounded': !load}"><span :class="{'hidden': !load}">↓￥</span>{{spending}}</h1>
                         </div>
                         <div class="flex-1">
-                            <h1 class="text-5xl m-3 font-bold" :class="{'text-green-500': balance > 0, 'text-red-500': balance < 0}">￥{{balance}}</h1>
+                            <h1 class="text-5xl m-3 font-bold" :class="{'text-green-500': balance > 0, 'text-red-500': balance < 0, 'animate-pulse bg-gray-200 h-12 w-24 rounded': !load}"><span :class="{'hidden': !load}">￥</span>{{balance}}</h1>
                         </div>
                     </div>
                 </div>
@@ -58,7 +58,7 @@
                 </div>
                 <div>
                     <h1 class="text-gray-600 mt-8">全体収益 ({{total_balance}} + ({{balance}}))</h1>
-                    <h1 class="text-5xl font-bold m-3" :class="{'text-green-500': (total_balance + balance) > 0, 'text-red-500': (total_balance + balance) < 0}">￥{{total_balance + balance}}</h1>
+                    <h1 class="text-5xl font-bold m-3" :class="{'text-green-500': (total_balance + balance) > 0, 'text-red-500': (total_balance + balance) < 0, 'animate-pulse bg-gray-200 h-12 w-24 rounded': !load}"><span :class="{'hidden': !load}">￥{{(total_balance + balance) || null}}</span></h1>
                 </div>
             </div>
         </div>
@@ -72,7 +72,7 @@
                         <h1 class="text-xl mx-1 font-bold">募集状況</h1>
                     </div>
                     <div class="inline-block relative w-full flex-1 m-1">
-                        <select class="block appearance-none w-full bg-white border hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" :disabled="(settlement_id > 0)" :class="{'border-green-400': recruitment_status, 'border-yellow-400': !recruitment_status}" :value="recruitment_status" v-model="recruitment_status" @change="status_change">
+                        <select class="block appearance-none w-full bg-white border hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" :disabled="(settlement_id > 0)" :class="{'border-green-400': recruitment_status == 1, 'border-yellow-400': recruitment_status == 0, 'animate-pulse bg-gray-200 border-none': !load}" :value="recruitment_status" v-model="recruitment_status" @change="status_change">
                             <option value="0">未募集</option>
                             <option value="1">募集中</option>
                         </select>
@@ -89,7 +89,7 @@
                         <h1 class="text-xl m-1">参加費</h1>
                     </div>
                     <div class="flex-1 m-1">
-                        <input class="bg-gray-200 w-full lg:w-64 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 income_obj control" :readonly="(settlement_id > 0)" :value="fee" v-model.number="fee" @input="update_balance" type="number">
+                        <input class="bg-gray-200 w-full lg:w-64 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 income_obj control" :class="{'animate-pulse bg-gray-200': !load}" :readonly="(settlement_id > 0)" :value="fee" v-model.number="fee" @input="update_balance" type="number">
                         <nobr class="text-xl m-1">円</nobr>
                     </div>
                 </div>
@@ -98,9 +98,9 @@
                         <h1 class="text-xl m-1">その他</h1>
                     </div>
                     <div class="flex-1 m-1">
-                        <input class="bg-gray-200 w-full lg:w-64 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 income_obj control" :value="income_other" v-model.number="income_other" @input="update_balance" :readonly="(settlement_id > 0)" type="number">
+                        <input class="bg-gray-200 w-full lg:w-64 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 income_obj control"  :class="{'animate-pulse bg-gray-200': !load}" v-model.number="income_other" @input="update_balance" :readonly="(settlement_id > 0)" type="number">
                         <nobr class="text-xl m-1">円</nobr>
-                        <input class="bg-gray-200 w-full lg:w-64 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 income_obj my-2 w-64 lg:w-full control" :value="income_other_memo" v-model="income_other_memo" type="text" :readonly="(settlement_id > 0)" placeholder="メモ">
+                        <input class="bg-gray-200 w-full lg:w-64 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 income_obj my-2 w-64 lg:w-full control" v-model="income_other_memo" type="text" :readonly="(settlement_id > 0)">
                     </div>
                 </div>
                 <div class="w-full m-2">
@@ -111,7 +111,7 @@
                         <h1 class="text-xl m-1">体育館代</h1>
                     </div>
                     <div class="flex-1 m-1">
-                        <input class="bg-gray-200 w-full lg:w-64 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 spending_obj control" :readonly="(settlement_id > 0)" :value="gym" v-model.number="gym" @input="update_balance" type="number">
+                        <input class="bg-gray-200 w-full lg:w-64 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 spending_obj control" :class="{'animate-pulse bg-gray-200 border-none': !load}" :readonly="(settlement_id > 0)" :value="gym" v-model.number="gym" @input="update_balance" type="number">
                         <nobr class="text-xl m-1">円</nobr>
                     </div>
                 </div>
@@ -120,7 +120,7 @@
                         <h1 class="text-xl m-1">シャトル代</h1>
                     </div>
                     <div class="flex-1 m-1">
-                        <input class="bg-gray-200 w-full lg:w-64 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 spending_obj control" :value="shattle" v-model.number="shattle" @input="update_balance" :readonly="(settlement_id > 0)" type="number">
+                        <input class="bg-gray-200 w-full lg:w-64 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 spending_obj control" :class="{'animate-pulse bg-gray-200 border-none': !load}" v-model.number="shattle" @input="update_balance" :readonly="(settlement_id > 0)" type="number">
                         <nobr class="text-xl m-1">円</nobr>
                     </div>
                 </div>
@@ -129,9 +129,9 @@
                         <h1 class="text-xl m-1">その他</h1>
                     </div>
                     <div class="flex-1 m-1">
-                        <input class="bg-gray-200 w-full lg:w-64 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 spending_obj control" :value="other" v-model.number="other" @input="update_balance" :readonly="(settlement_id > 0)" type="number">
+                        <input class="bg-gray-200 w-full lg:w-64 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 spending_obj control" :class="{'animate-pulse bg-gray-200 border-none': !load}" v-model.number="spending_other" @input="update_balance" :readonly="(settlement_id > 0)" type="number">
                         <nobr class="text-xl m-1">円</nobr>
-                        <input class="bg-gray-200 w-full lg:w-64 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 income_obj my-2 w-64 lg:w-full control" :value="other_memo" :readonly="(settlement_id > 0)" v-model="other_memo" type="text" placeholder="メモ">
+                        <input class="bg-gray-200 w-full lg:w-64 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 income_obj my-2 w-64 lg:w-full control" :class="{'animate-pulse bg-gray-200 border-none': !load}" :readonly="(settlement_id > 0)" v-model="spending_other_memo" type="text" >
                     </div>
                 </div>
                 <div class="lg:flex w-full m-2">
@@ -139,15 +139,15 @@
                         <h1 class="text-xl m-1 font-bold">決済</h1>
                     </div>
                     <div class="flex-1">
-                        <input type="button" class="bg-blue-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full w-full cursor-pointer" :class="{'hidden': settlement_id > 0}" @click="settlement_click" value="決定" :disabled="(settlement_id > 0)">
-                        <h1 class="text-xl m-1 font-bold" :class="{'hidden': settlement_id == 0}">決済番号：{{settlement_id}}</h1>
+                        <input type="button" class="bg-blue-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full w-full cursor-pointer" :class="{'hidden': (settlement_id > 0) || (!load)}" @click="settlement_click" value="決定" :disabled="(settlement_id > 0)">
+                        <h1 class="text-xl m-1 font-bold" :class="{'hidden': settlement_id == 0, 'animate-pulse bg-gray-200 h-8 w-64 rounded': !load}"><span :class="{'hidden': !load}">決済番号：{{settlement_id}}</span></h1>
                     </div>
                 </div>
             </div>
 
             <div class="flex-1 h-full p-2 bg-white m-5 rounded-lg">
                 <h1 class="text-gray-700">メモ</h1>
-                <textarea class="h-64 w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 mt-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="text" placeholder="メモは入力されていません" :value="memo" v-model="memo"></textarea>
+                <textarea class="h-64 w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 mt-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="text" :class="{'animate-pulse bg-gray-200': !load}" v-model="memo"></textarea>
                 <div class="text-right">
                     <input type="button" class="bg-blue-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full cursor-pointer" @click="save_memo" value="保存">
                 </div>
@@ -155,7 +155,7 @@
         </div>
         <div class="p-2 bg-white m-5 rounded-lg">
             <h1 class="text-gray-700">参加者リスト</h1>
-            <div class="m-3">
+            <div class="m-3" :class="{'hidden': (settlement_id > 0)}">
                 <input class="bg-gray-200 text-gray-700 border border-gray-200 rounded-full py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 income_obj my-2 w-64 control"  type="text" list="name_list" placeholder="メンバー追加" v-model="new_member" @input="member_name" :readonly="(settlement_id > 0)">
                 <datalist id="name_list">
                     <option v-for="(member, index) in new_member_list" :value="member.id">{{member.name}}</option>
@@ -177,13 +177,13 @@
                 </thead>
                 <tbody>
                     <tr v-for="(member, index) in member_list">
-                        <th class="px-4 py-2">{{member.id}}</th>
-                        <th class="px-4 py-2">{{member.name}}</th>
-                        <th class="px-4 py-2 lg:table-cell hidden">{{member.attenance}}</th>
-                        <th class="px-4 py-2 lg:table-cell hidden">{{member.total_practice}}</th>
-                        <th class="px-4 py-2 lg:table-cell hidden">{{member.attendance_parcent}}</th>
-                        <th class="px-4 py-2 lg:table-cell hidden">{{member.last_entry}}</th>
-                        <th class="px-4 py-2 lg:table-cell hidden">{{member.join_at}}</th>
+                        <th class="border px-4 py-2">{{member.id}}</th>
+                        <th class="border px-4 py-2">{{member.name}}</th>
+                        <th class="border px-4 py-2 lg:table-cell hidden">{{member.attenance}}</th>
+                        <th class="border px-4 py-2 lg:table-cell hidden">{{member.total_practice}}</th>
+                        <th class="border px-4 py-2 lg:table-cell hidden">{{member.attendance_parcent}}</th>
+                        <th class="border px-4 py-2 lg:table-cell hidden">{{member.last_entry}}</th>
+                        <th class="border px-4 py-2 lg:table-cell hidden">{{member.join_at}}</th>
                     </tr>
                 </tbody>
             </table>
@@ -208,24 +208,24 @@
                 settlement_btn_obj_flag: true,
 
                 plan: null,
-                member_list: {id:"1"},
+                member_list: {},
                 title: "",
-                practice_id: 0,
-                settlement_id: 0,
+                practice_id: null,
+                settlement_id: null,
 
-                fee: 0,
-                income_other: 0,
-                income: 0,
-                income_other_memo: "",
+                fee: null,
+                income_other: null,
+                income: null,
+                income_other_memo: null,
 
-                gym: 0,
-                shattle: 0,
-                other: 0,
-                spending: 0,
-                other_memo: "",
+                gym: null,
+                shattle: null,
+                spending_other: null,
+                spending: null,
+                spending_other_memo: null,
 
-                member_number: 0,
-                member_parcent: 0,
+                member_number: null,
+                member_parcent: null,
 
                 memo: "",
 
@@ -238,13 +238,22 @@
 
         //Get practice plan
         mounted:async function(){
-            const res = await axios.post("./practice/index")
-            
-            this.plan_date = res.data.plan_date
-            this.total_balance = res.data.balance
-            this.all_member_number = res.data.all_member_number
+            this.print_log("データベース接続中", "info", true)
 
-            this.start_up();
+            await axios.post("./practice/index").then((response) => {
+                res = response.data
+                if(res == "error"){
+                    this.print_log("データベース接続失敗", "error", false)
+                }else{
+                    this.print_log("練習データ取得中", "info", true)
+
+                    this.plan_date =res.plan_date
+                    this.total_balance = res.balance
+                    this.all_member_number = res.all_member_number
+
+                    this.start_up();
+                }
+            })
         },
 
         methods:{
@@ -281,19 +290,53 @@
 
             //Get practice data
             get_data:async function(){
+                this.load = false
+
+                this.print_log("データ読み込み中", "info", true)
+
+                //Reset
+                this.member_list = null
+                this.title = null
+                this.settlement_id = null
+                this.practice_id = null
+                this.practice_time = null
+                this.member_number = null
+                this.member_parcent = null
+                this.fee = null
+                this.income_other = null
+                this.income = null
+                this.income_other_memo = null
+                this.gym = null
+                this.shattle = null
+                this.spending_other = null
+                this.spending = null
+                this.spending_other_memo = null
+                this.balance = null
+                this.memo = null
+                this.recruitment_status = null
+
                 const params = new URLSearchParams()
                 params.append("date", this.practice_date)
 
-                const res = await axios.post("./practice/get_data", params)
+                await axios.post("./practice/get_data", params).then((response) => {
+                    res = response.data
 
-                this.plan = res.data
+                    if(res == "error") {
+                        this.print_log("読み込み失敗", "error", false)
+                    }else{
+                        this.print_log(`読み込み完了(${this.practice_date})`, "success", false)
 
-                this.update_data()
+                        this.plan = res
+
+                        this.update_data()
+                    }
+                })
             },
 
             //Update data
             update_data: function(){
                 plan = this.plan
+                this.load = true
 
                 this.member_list = plan.member
                 this.title = plan.title
@@ -309,12 +352,14 @@
                 this.fee = plan.fee
                 this.income_other = plan.income_other
                 this.income = (this.member_number * this.fee) + this.income_other
+                this.income_other_memo = plan.income_other_memo
                 
                 //Spending
                 this.gym = plan.gym
                 this.shattle = plan.shattle
-                this.other = plan.other
-                this.spending = this.gym + this.shattle + this.other
+                this.spending_other = plan.spending_other
+                this.spending = this.gym + this.shattle + this.spending_other
+                this.spending_other_memo = plan.spending_other_memo
 
                 //Balance
                 this.balance = this.income - this.spending
@@ -328,12 +373,12 @@
             },
 
             back:function(){
-                if(this.plan_date.length >= this.practice_date_pos - 2){
+                if(0 <= this.practice_date_pos - 1){
                     this.practice_date_pos -= 1;
                     this.practice_date = this.plan_date[this.practice_date_pos];
                     this.get_data()
                 }else{
-                    alert("エラー")
+                    this.print_log("練習プランがありません", "error", false)
                 }
             },
 
@@ -343,11 +388,13 @@
                     this.practice_date = this.plan_date[this.practice_date_pos];
                     this.get_data();
                 }else{
-                    alert("エラー")
+                    this.print_log("練習プランがありません", "error", false)
                 }
             },
 
             status_change:async function(){
+                this.print_log("通知送信中", "info", true)
+
                 let text = "";
 
                 if(this.recruitment_status == 1){
@@ -363,10 +410,14 @@
 
                 const res = await axios.post("https://ss1.xrea.com/geyamaclub.s203.xrea.com/geyamaclub/line/push", params)
 
-                console.log(res)
+                if(res.data == "error"){
+                    this.print_log("通知完了", "success", false)
+                }
             },
 
             settlement_click:async function(){
+                this.print_log("決済処理中", "info", true)
+
                 fee_income = this.fee * this.member_number
 
                 const params = new URLSearchParams()
@@ -375,15 +426,22 @@
                 params.append("date", this.practice_date)
                 params.append("practice_id", this.practice_id)
                 params.append("income_other", this.income_other)
-                params.append("income_other_memo", this.income_othrt_memo)
+                params.append("income_other_memo", this.income_other_memo)
                 params.append("gym", this.gym)
                 params.append("shattle", this.shattle)
-                params.append("other", this.other)
-                params.append("other_memo", this.other_memo)
+                params.append("spending_other", this.spending_other)
+                params.append("spending_other_memo", this.spending_other_memo)
 
                 const res = await axios.post("./practice/settlement", params)
 
-                this.settlement_id = res.data;
+                if(res.data == "error"){
+                    this.print_log("決済を完了できませんでした", "error", false)
+                }else{
+                    this.settlement_id = res.data;
+
+                    this.print_log("決済が完了しました", "success", false)
+                }
+
             },
 
             update_balance: function(){
@@ -401,14 +459,18 @@
             },
 
             save_memo:async function(){
+                this.print_log("メモ保存中", "info", true);
+
                 const params = new URLSearchParams()
                 params.append("memo", this.memo)
                 params.append("practice_id", this.practice_id)
 
                 const res = await axios.post("./practice/save_memo", params)
 
-                if(res.data == "200"){
-                    alert("Success")
+                if(res.data == "error"){
+                    this.print_log("メモ保存失敗", "error", false)
+                }else{
+                    this.print_log("メモ保存完了", "success", false)
                 }
             },
 
@@ -422,11 +484,19 @@
             },
 
             add_member: async function(){
+                this.print_log("メンバー追加中", "info", true)
+
                 const params = new URLSearchParams()
                 params.append("user_id", this.new_member)
                 params.append("id", this.practice_id)
 
                 const res = await axios.post("./practice/add_member", params)
+
+                if(res.data == "error"){
+                    this.print_log("メンバー追加失敗", "error", false)
+                }else{
+                    this.print_log("メンバー追加完了", "success", false)
+                }
                 
                 this.new_member = ""
                 this.get_data()
@@ -438,9 +508,19 @@
                 params.append("id", this.practice_id)
 
                 const res = await axios.post("./practice/delete_member", params)
+
+                if(res.data == "error"){
+                    this.print_log("メンバー削除失敗", "error", false)
+                }else{
+                    this.print_log("メンバー削除成功", "success", false)
+                }
                 
                 this.new_member = ""
                 this.get_data()
+            },
+
+            print_log:function(msg, type, option){
+                this.$emit("log", msg, type, option)
             }
         }
     }

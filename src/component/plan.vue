@@ -5,17 +5,17 @@
         </div>
         <div class="lg:flex lg:w-1/3 w-full lg:m-3">
             <div class="w-full lg:m-2">
-                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline m-1" :value="event_title" v-model="event_title" type="text" placeholder="イベントタイトル" value="通常練習">
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline m-1" v-model="event_title" type="text" placeholder="イベントタイトル" value="通常練習">
                 <h1 class="text-3xl m-1">{{event_start}}</h1>
                 <div class="flex m-1 w-full">
                     <div class="flex-1">
-                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" v-model="start_time" type="time" value="18:30">
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" v-model="start_time" type="time">
                     </div>
                     <div class="flex-1">
                         <h1 class="text-3xl text-center">~</h1>
                     </div>
                     <div class="flex-1">
-                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" v-model="end_time" type="time" value="21:00">
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" v-model="end_time" type="time">
                     </div>
                 </div>
                 <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline m-1" type="text" placeholder="場所" value="中央小学校">
@@ -41,8 +41,8 @@
                 date_list: [],
                 event_title: "",
                 event_start: "",
-                start_time: "",
-                end_time: "",
+                start_time: "18:30",
+                end_time: "21:30",
                 date: "",
                 calendar: null,
                 practice_id: null,
@@ -50,56 +50,64 @@
         },
 
         mounted:async function(){
+            this.print_log("データ読み込み中", "info", true)
+
             const res = await axios.post("./plan/index")
 
-            this.plan_list = res.data[0]
-            this.date_list = res.data[1]
+            if(res.data == "error"){
+                this.print_log("データ読み込み失敗", "error", false)
+            }else{
+                this.print_log("データ読み込み完了", "success", false)
 
-            var calendarEl = document.getElementById('calendar');
-            this.calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                locale: 'ja',
-                selectable: true,
-                nowIndicator: true,
-                eventClick: info => {
-                    let click_title = info.event.title;
-                    let click_start = info.event.start;
+                this.plan_list = res.data[0]
+                this.date_list = res.data[1]
+    
+                var calendarEl = document.getElementById('calendar');
+                this.calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'dayGridMonth',
+                    locale: 'ja',
+                    selectable: true,
+                    nowIndicator: true,
+                    eventClick: info => {
+                        let click_title = info.event.title;
+                        let click_start = info.event.start;
+    
+                        this.date = this.format_date(click_start);
+                        this.event_title = click_title;
+                        this.event_start = click_start.getFullYear() + "年" + (parseInt(click_start.getMonth()) + 1) + "月" + click_start.getDate() + "日";
+    
+                        let time = this.plan_list[this.date_list[this.format_date(click_start)]]["time"].split("-")                
+                        this.start_time = time[0]
+                        this.end_time = time[1]
+    
+                        this.practice_id = this.plan_list[this.date_list[this.format_date(click_start)]]["practice_id"]
+                    },
+                    dateClick:info => {
+                        let d = new Date(info.dateStr)
+                        this.date = this.format_date(d)
+                        this.event_title = "通常練習"
+                        this.event_start = `NEW:${d.getFullYear()}年${parseInt(d.getMonth()) + 1}月${d.getDate()}日`
+                        this.place = "中央小学校"
+                        this.start_time = "18:30"
+                        this.end_time = "21:00"
+                    },
+                    buttonText: {
+                        prev:     '<',
+                        next:     '>',
+                        prevYear: '<<',
+                        nextYear: '>>',
+                        today:    '今日',
+                        month:    '月',
+                        week:     '週',
+                        day:      '日',
+                        list:     '一覧'
+                    },
+                    events: this.plan_list
+                });
+    
+                this.calendar.render();
+            }
 
-                    this.date = this.format_date(click_start);
-                    this.event_title = click_title;
-                    this.event_start = click_start.getFullYear() + "年" + (parseInt(click_start.getMonth()) + 1) + "月" + click_start.getDate() + "日";
-
-                    let time = this.plan_list[this.date_list[this.format_date(click_start)]]["time"].split("-")
-                    console.log(time)                   
-                    this.start_time = time[0]
-                    this.end_time = time[1]
-
-                    this.practice_id = this.plan_list[this.date_list[this.format_date(click_start)]]["practice_id"]
-                },
-                dateClick:info => {
-                    let d = new Date(info.dateStr)
-                    this.date = this.format_date(d)
-                    this.event_title = "通常練習"
-                    this.event_start = `NEW:${d.getFullYear()}年${parseInt(d.getMonth()) + 1}月${d.getDate()}日`
-                    this.place = "中央小学校"
-                    this.start_time = "18:30"
-                    this.end_time = "21:00"
-                },
-                buttonText: {
-                    prev:     '<',
-                    next:     '>',
-                    prevYear: '<<',
-                    nextYear: '>>',
-                    today:    '今日',
-                    month:    '月',
-                    week:     '週',
-                    day:      '日',
-                    list:     '一覧'
-                },
-                events: this.plan_list
-            });
-
-            this.calendar.render();
         },
         
         methods: {
@@ -112,6 +120,8 @@
             },
 
             add_event: async function(){
+                this.print_log("予定追加中", "info", true)
+
                 const params = new URLSearchParams()
                 params.append("title", this.event_title)
                 params.append("date", this.date)
@@ -120,19 +130,37 @@
                 params.append("place", this.place);
 
                 const res = await axios.post("./plan/add_event", params)
+
+                if(res.data == "error") {
+                    this.print_log("予定追加失敗", "error", false)
+                }else{
+                    this.print_log("予定追加完了", "success", false)
+                }
                 
                 this.calendar.addEvent({id: this.date, title : this.event_title, start: this.date});
                 this.calendar.render();
             },
 
             delete_event : async function(){
+                this.print_log("予定削除中", "info", true)
+
                 const params = new URLSearchParams()
                 params.append("id", this.practice_id)
 
                 const res = await axios.post("./plan/delete_event", params)
 
+                if(res.data == "error"){
+                    this.print_log("予定削除失敗", "error", false)
+                }else{
+                    this.print_log("予定削除完了", "success", false)
+                }
+
                 this.calendar.getEventById(this.date).remove();
                 this.calendar.render();
+            },
+
+            print_log:function(msg, type, option){
+                this.$emit("log", msg, type, option)
             }
         },
     }
